@@ -12,25 +12,15 @@ app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var _novo_usuario = new Mongoose.Schema({
-  nome: String,
-  email: String,
-  telefone: String,
-  cep: String,
-  endereco: String,
-  usuario: String,
-  senha: String
-});
-
 var _novo_contato = new Mongoose.Schema({
-  nome: String,
-  email: String,
-  telefone: String,
-  cep: String,
-  endereco: String,
+    nome: String,
+    email: String,
+    telefone: String,
+    cep: String,
+    endereco: String,
 });
 
-const Usuario = Mongoose.model('usuario', _novo_usuario);
+const Contato = Mongoose.model('contato', _novo_contato);
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -40,27 +30,25 @@ app.use(function (req, res, next) {
   next();
 });
 
-//rest retorna usuario
+//rest retorna lista de contatos
 router.get('/', function (req, res, next) {
-  var user = req.param('user');
-  var senha = req.param('senha');
-
-  Usuario.find({}, function (err, usuario) {
+  
+    Contato.find({}, function (err, contato) {
     if (err) return console.error(err);
-    res.json({ usuario });
+    res.json({ contato });
   });
 });
 
-//inserção de usuario via post 
+//inserção de contato via post 
 router.post('/', function (req, res) {
   console.log(req.body);
 
-  _novo_usuario = req.body;
+  _novo_contato = req.body;
 
   MongoClient.connect(url_db, function (err, db) {
     if (err) throw err;
     var dbo = db.db('synchro');
-    dbo.collection('usuarios').insertOne(_novo_usuario, function (err, res) {
+    dbo.collection('contatos').insertOne(_novo_contato, function (err, res) {
       if (err) throw err;
       console.log('registro inserido com sucesso!');
       db.close();
@@ -68,5 +56,5 @@ router.post('/', function (req, res) {
   });
 });
 
-app.use('/api/usuario', router);
+app.use('/api/contato', router);
 app.listen(3000);
