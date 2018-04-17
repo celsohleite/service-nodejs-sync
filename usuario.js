@@ -42,13 +42,45 @@ app.use(function (req, res, next) {
 
 //rest retorna usuario
 router.get('/', function (req, res, next) {
-  var user = req.param('user');
-  var senha = req.param('senha');
+  var param_nome_usario = req.query.nome;
+  var param_usuario = req.query.usuario;
+  var param_email_usuario = req.query.email;
+  var param_senha = req.query.senha;
+  var param_tipo = req.query.tipo;
+  var parametros;
 
-  Usuario.find({}, function (err, usuario) {
-    if (err) return console.error(err);
-    res.json({ usuario });
-  });
+  console.log(param_tipo);
+
+  if (param_tipo == 'logon') {
+    parametros = { usuario: param_usuario, senha: param_senha };
+
+    Usuario.find(parametros, function (err, usuario) {
+      if (err) return console.error(err);
+      res.json({ usuario });
+    });
+  } else if (param_nome_usario != '') {
+    parametros = { nome: param_nome_usario }
+
+    Usuario.find(parametros, function (err, usuario) {
+      if (err) return console.error(err);
+      res.json({ usuario });
+    });
+  } else if (param_email_usuario != '') {
+    parametros = { email: param_email_usuario }
+
+    Usuario.find(parametros, function (err, usuario) {
+      if (err) return console.error(err);
+      res.json({ usuario });
+    });
+  } else if (param_usuario != '') {
+    parametros = { usuario: param_usuario }
+    
+    Usuario.find(parametros, function (err, usuario) {
+      if (err) return console.error(err);
+      res.json({ usuario });
+    });
+  }
+  
 });
 
 //inserção de usuario via post 
@@ -67,6 +99,5 @@ router.post('/', function (req, res) {
     });
   });
 });
-
 app.use('/api/usuario', router);
 app.listen(3000);

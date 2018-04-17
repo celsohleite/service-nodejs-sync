@@ -32,8 +32,8 @@ app.use(function (req, res, next) {
 
 //rest retorna lista de contatos
 router.get('/', function (req, res, next) {
-  
-    Contato.find({}, function (err, contato) {
+
+    Contato.find({id_usuario: req.query.id_usuario}, function (err, contato) {
     if (err) return console.error(err);
     res.json({ contato });
   });
@@ -57,4 +57,4 @@ router.post('/', function (req, res) {
 });
 
 app.use('/api/contato', router);
-app.listen(3000);
+app.listen(3001);
